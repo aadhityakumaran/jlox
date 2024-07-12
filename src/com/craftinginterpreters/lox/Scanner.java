@@ -156,14 +156,19 @@ public class Scanner {
     }
 
     private void blockComment() {
-        while (!isAtEnd()) {
+        int nestLevel = 1;
+        while (!isAtEnd() && nestLevel > 0) {
             char c = advance();
             if (c == '*' && match('/')) {
-                return;
-            }
-            if (c == '\n') line++;
+                nestLevel--;
+            } else if (c == '/' && match('*')) {
+                nestLevel++;
+            } else if (c == '\n') line++;
         }
-        Lox.error(line, "Unclosed Comment");
+
+        if (isAtEnd()) {
+            Lox.error(line, "Unclosed Comment");
+        }
     }
 
     private char advance() {
