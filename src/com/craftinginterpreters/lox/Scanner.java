@@ -12,7 +12,7 @@ public class Scanner {
     private final List<Token> tokens = new ArrayList<>();
     private int start = 0;
     private int current = 0;
-    private int line = 0;
+    private int line = 1;
 
     private static final Map<String, TokenType> keywords;
 
@@ -89,6 +89,8 @@ public class Scanner {
             case '/':
                 if (match('/')) {
                     while (peek() != '\n' && !isAtEnd()) advance();
+                } else if (match('*')) {
+                    blockComment();
                 } else {
                     addToken(SLASH);
                 }
@@ -151,6 +153,16 @@ public class Scanner {
         TokenType type = keywords.get(lexeme);
         if (type == null) type = IDENTIFIER;
         addToken(type);
+    }
+
+    private void blockComment() {
+        while (!isAtEnd()) {
+            char c = advance();
+            if (c == '*' && match('/')) {
+                return;
+            }
+        }
+        Lox.error(line, "Unclosed Comment");
     }
 
     private char advance() {
