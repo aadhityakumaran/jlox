@@ -161,6 +161,7 @@ public class Scanner {
             if (c == '*' && match('/')) {
                 return;
             }
+            if (c == '\n') line++;
         }
         Lox.error(line, "Unclosed Comment");
     }
