@@ -1,6 +1,13 @@
 package com.craftinginterpreters.lox;
 
 abstract class Expr {
+    interface Visitor<R> {
+        R visit(Binary Expr);
+        R visit(Grouping Expr);
+        R visit(Literal Expr);
+        R visit(Unary Expr);
+    }
+
     static class Binary extends Expr {
         final Expr left;
         final Token operator;
@@ -11,6 +18,11 @@ abstract class Expr {
             this.operator = operator;
             this.right = right;
         }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visit(this);
+        }
     }
 
     static class Grouping extends Expr {
@@ -19,6 +31,11 @@ abstract class Expr {
         Grouping(Expr expression) {
             this.expression = expression;
         }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visit(this);
+        }
     }
 
     static class Literal extends Expr {
@@ -26,6 +43,11 @@ abstract class Expr {
 
         Literal(Object value) {
             this.value = value;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visit(this);
         }
     }
 
@@ -37,7 +59,13 @@ abstract class Expr {
             this.operator = operator;
             this.right = right;
         }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visit(this);
+        }
     }
 
+    abstract <R> R accept(Visitor<R> visitor);
 }
 
