@@ -2,11 +2,11 @@ package com.craftinginterpreters.lox;
 
 abstract class Expr {
     interface Visitor<R> {
-        R visit(Binary Expr);
-        R visit(Grouping Expr);
-        R visit(Literal Expr);
-        R visit(Unary Expr);
-        R visit(Ternary Expr);
+        R visit(Binary expr);
+        R visit(Grouping expr);
+        R visit(Literal expr);
+        R visit(Unary expr);
+        R visit(Ternary expr);
     }
 
     static class Binary extends Expr {

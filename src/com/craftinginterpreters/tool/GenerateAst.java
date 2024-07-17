@@ -54,7 +54,7 @@ public class GenerateAst {
 
         for (String type: types) {
             String typeName = type.split(":")[0].trim();
-            writer.println("        R visit(" + typeName + " " + baseName + ");");
+            writer.println("        R visit(" + typeName + " " + baseName.toLowerCase() + ");");
         }
 
         writer.println("    }");

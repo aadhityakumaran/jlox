@@ -56,6 +56,17 @@ class Parser {
         return parseBinary(this::unary, STAR, SLASH);
     }
 
+    private Expr parseBinary(Supplier<Expr> eval, TokenType... operators) {
+        Expr expr = eval.get();
+
+        while (match(operators)) {
+            Token operator = previous();
+            Expr right = eval.get();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+        return expr;
+    }
+
     private Expr unary() {
         if (match(BANG, MINUS)) {
             Token operator = previous();
@@ -80,18 +91,6 @@ class Parser {
 
         throw error(peek(), "Expect expression.");
     }
-
-    private Expr parseBinary(Supplier<Expr> eval, TokenType... operators) {
-        Expr expr = eval.get();
-
-        while (match(operators)) {
-            Token operator = previous();
-            Expr right = eval.get();
-            expr = new Expr.Binary(expr, operator, right);
-        }
-        return expr;
-    }
-
 
     private boolean match(TokenType ...types) {
         for (TokenType type : types) {
