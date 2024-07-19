@@ -7,6 +7,7 @@ abstract class Expr {
         R visit(Literal expr);
         R visit(Unary expr);
         R visit(Ternary expr);
+        R visit(Variable expr);
     }
 
     static class Binary extends Expr {
@@ -76,6 +77,19 @@ abstract class Expr {
             this.condition = condition;
             this.onTrue = onTrue;
             this.onFalse = onFalse;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visit(this);
+        }
+    }
+
+    static class Variable extends Expr {
+        final Token name;
+
+        Variable(Token name) {
+            this.name = name;
         }
 
         @Override
