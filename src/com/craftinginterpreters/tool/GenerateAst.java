@@ -19,6 +19,7 @@ public class GenerateAst {
                 "Binary     : Expr left, Token operator, Expr right",
                 "Grouping   : Expr expression",
                 "Literal    : Object value",
+                "Logical    : Expr left, Token operator, Expr right",
                 "Ternary    : Expr condition, Expr onTrue, Expr onFalse",
                 "Unary      : Token operator, Expr right",
                 "Variable   : Token name"
@@ -38,8 +39,8 @@ public class GenerateAst {
         PrintWriter writer = new PrintWriter(path, StandardCharsets.UTF_8);
 
         writer.println("package com.craftinginterpreters.lox;");
-//        writer.println();
-//        writer.println("import java.util.List;");
+        writer.println();
+        writer.println("import java.util.List;");
         writer.println();
         writer.println("abstract class " + baseName + " {");
 
