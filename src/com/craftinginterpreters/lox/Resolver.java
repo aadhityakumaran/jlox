@@ -8,7 +8,9 @@ import java.util.Stack;
 class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     private final Interpreter interpreter;
     private final Stack<Map<String, Boolean>> scopes = new Stack<>();
+
     private FunctionType currentFunction = FunctionType.NONE;
+    private int loopDepth = 0;
 
     Resolver(Interpreter interpreter) {
         this.interpreter = interpreter;
@@ -94,6 +96,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     @Override
     public Void visit(Stmt.Break stmt) {
+        if (loopDepth <= 0) Lox.error(stmt.keyword, "'break' must be used inside a loop.");
         return null;
     }
 
@@ -156,7 +159,9 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visit(Stmt.While stmt) {
         resolve(stmt.condition);
+        loopDepth++;
         resolve(stmt.body);
+        loopDepth--;
         return null;
     }
 
