@@ -4,8 +4,9 @@ import java.util.List;
 
 abstract class Stmt {
     interface Visitor<R> {
-        R visit(Break stmt);
         R visit(Block stmt);
+        R visit(Break stmt);
+        R visit(Class stmt);
         R visit(Expression stmt);
         R visit(Function stmt);
         R visit(If stmt);
@@ -13,6 +14,19 @@ abstract class Stmt {
         R visit(Return stmt);
         R visit(Var stmt);
         R visit(While stmt);
+    }
+
+    static class Block extends Stmt {
+        final List<Stmt> statements;
+
+        Block(List<Stmt> statements) {
+            this.statements = statements;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visit(this);
+        }
     }
 
     static class Break extends Stmt {
@@ -28,11 +42,13 @@ abstract class Stmt {
         }
     }
 
-    static class Block extends Stmt {
-        final List<Stmt> statements;
+    static class Class extends Stmt {
+        final Token name;
+        final List<Stmt.Function> methods;
 
-        Block(List<Stmt> statements) {
-            this.statements = statements;
+        Class(Token name, List<Stmt.Function> methods) {
+            this.name = name;
+            this.methods = methods;
         }
 
         @Override

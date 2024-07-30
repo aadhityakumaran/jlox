@@ -95,16 +95,23 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visit(Stmt.Block stmt) {
+        beginScope();
+        resolve(stmt.statements);
+        endScope();
+        return null;
+    }
+
+    @Override
     public Void visit(Stmt.Break stmt) {
         if (loopDepth <= 0) Lox.error(stmt.keyword, "'break' must be used inside a loop.");
         return null;
     }
 
     @Override
-    public Void visit(Stmt.Block stmt) {
-        beginScope();
-        resolve(stmt.statements);
-        endScope();
+    public Void visit(Stmt.Class stmt) {
+        declare(stmt.name);
+        define(stmt.name);
         return null;
     }
 

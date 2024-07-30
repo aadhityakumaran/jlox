@@ -174,13 +174,21 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visit(Stmt.Block stmt) {
+        executeBlock(stmt.statements, new Environment(environment));
+        return null;
+    }
+
+    @Override
     public Void visit(Stmt.Break stmt) {
         throw new Break();
     }
 
     @Override
-    public Void visit(Stmt.Block stmt) {
-        executeBlock(stmt.statements, new Environment(environment));
+    public Void visit(Stmt.Class stmt) {
+        environment.define(stmt.name.lexeme, null);
+        LoxClass klass = new LoxClass(stmt.name.lexeme);
+        environment.assign(stmt.name, klass);
         return null;
     }
 
