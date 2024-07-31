@@ -77,6 +77,13 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visit(Expr.Set expr) {
+        resolve(expr.value);
+        resolve(expr.object);
+        return null;
+    }
+
+    @Override
     public Void visit(Expr.Ternary expr) {
         resolve(expr.condition);
         resolve(expr.onTrue);
