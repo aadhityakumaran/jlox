@@ -60,7 +60,7 @@ class Parser {
             initializer = expression();
         }
 
-        consume(SEMICOLON, "Expect ; after variable declaration");
+        consume(SEMICOLON, "Expect ';' after variable declaration");
         return new Stmt.Var(name, initializer);
     }
 
@@ -306,7 +306,7 @@ class Parser {
                 expr = finishCall(expr);
             } else if (match(DOT)) {
                 Token name = consume(IDENTIFIER, "Expect property name after '.'.");
-                return new Expr.Get(expr, name);
+                expr = new Expr.Get(expr, name);
             } else {
                 break;
             }
