@@ -13,6 +13,7 @@ abstract class Expr {
         R visit(Logical expr);
         R visit(Set expr);
         R visit(Ternary expr);
+        R visit(This expr);
         R visit(Unary expr);
         R visit(Variable expr);
     }
@@ -150,6 +151,19 @@ abstract class Expr {
             this.condition = condition;
             this.onTrue = onTrue;
             this.onFalse = onFalse;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visit(this);
+        }
+    }
+
+    static class This extends Expr {
+        final Token keyword;
+
+        This(Token keyword) {
+            this.keyword = keyword;
         }
 
         @Override
