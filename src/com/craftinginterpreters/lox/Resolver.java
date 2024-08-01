@@ -92,6 +92,12 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visit(Expr.Super expr) {
+        resolveLocal(expr, expr.keyword);
+        return null;
+    }
+
+    @Override
     public Void visit(Expr.Ternary expr) {
         resolve(expr.condition);
         resolve(expr.onTrue);
@@ -155,6 +161,12 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
         ClassType enclosing = currentClass;
         currentClass = ClassType.CLASS;
+
+        if (stmt.superclass != null) {
+            beginScope();
+            scopes.peek().put("super", true);
+        }
+
         beginScope();
         scopes.peek().put("this", true);
 
@@ -165,9 +177,11 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
             }
             resolveFunction(method, declaration);
         }
-        endScope();
-        currentClass = enclosing;
 
+        endScope();
+        if (stmt.superclass != null) endScope();
+
+        currentClass = enclosing;
         return null;
     }
 
