@@ -62,6 +62,12 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visit(Expr.Function expr) {
+        resolveFunction(expr, FunctionType.FUNCTION);
+        return null;
+    }
+
+    @Override
     public Void visit(Expr.Get expr) {
         resolve(expr.object);
         return null;
@@ -183,7 +189,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
             if (method.name.lexeme.equals("init")) {
                 declaration = FunctionType.INITIALIZER;
             }
-            resolveFunction(method, declaration);
+            resolveFunction(method.function, declaration);
         }
 
         endScope();
@@ -204,7 +210,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         declare(stmt.name);
         define(stmt.name);
 
-        resolveFunction(stmt, FunctionType.FUNCTION);
+        resolveFunction(stmt.function, FunctionType.FUNCTION);
         return null;
     }
 
@@ -264,7 +270,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         }
     }
 
-    private void resolveFunction(Stmt.Function function, FunctionType type) {
+    private void resolveFunction(Expr.Function function, FunctionType type) {
         FunctionType enclosing = currentFunction;
         currentFunction = type;
         beginScope();

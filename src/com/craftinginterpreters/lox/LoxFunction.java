@@ -3,11 +3,13 @@ package com.craftinginterpreters.lox;
 import java.util.List;
 
 class LoxFunction implements LoxCallable {
-    private final Stmt.Function declaration;
+    private final Token name;
+    private final Expr.Function declaration;
     private final Environment closure;
     private final boolean isInitializer;
 
-    LoxFunction(Stmt.Function declaration, Environment closure, boolean isInitializer) {
+    LoxFunction(Token name, Expr.Function declaration, Environment closure, boolean isInitializer) {
+        this.name = name;
         this.declaration = declaration;
         this.closure = closure;
         this.isInitializer = isInitializer;
@@ -16,7 +18,7 @@ class LoxFunction implements LoxCallable {
     LoxFunction bind(LoxInstance instance) {
         Environment environment = new Environment(closure);
         environment.define("this", instance);
-        return new LoxFunction(declaration, environment, isInitializer);
+        return new LoxFunction(this.name, declaration, environment, isInitializer);
     }
 
     @Override
@@ -45,6 +47,6 @@ class LoxFunction implements LoxCallable {
 
     @Override
     public String toString() {
-        return "<fn " + declaration.name.lexeme + ">";
+        return "<fn " + name.lexeme + ">";
     }
 }
