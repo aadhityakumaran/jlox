@@ -7,6 +7,7 @@ abstract class Expr {
         R visit(Assign expr);
         R visit(Binary expr);
         R visit(Call expr);
+        R visit(Function expr);
         R visit(Get expr);
         R visit(Grouping expr);
         R visit(Literal expr);
@@ -60,6 +61,21 @@ abstract class Expr {
             this.callee = callee;
             this.paren = paren;
             this.arguments = arguments;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visit(this);
+        }
+    }
+
+    static class Function extends Expr {
+        final List<Token> params;
+        final List<Stmt> body;
+
+        Function(List<Token> params, List<Stmt> body) {
+            this.params = params;
+            this.body = body;
         }
 
         @Override
